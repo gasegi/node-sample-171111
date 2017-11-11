@@ -20,12 +20,12 @@ class ExternalAppRoute {
 
     /* GET users listing. */
     this.router.get('/open', function (req, res, next) {
-      const path = req.query.path ? req.query.path : '';
-      const file = req.query.file ? req.query.file : 'test.txt';
+      const execPath = req.query.path ? req.query.path : `C:\\Program Files\\GIMP 2\\bin\\gimp-2.8.exe`;
+      const file = req.query.file ? req.query.file : 'test.jpg';
       const param = req.query.param ? req.query.param : '';
 
-      domain.open(path, file, param).then(res => {
-        res.json(res);
+      domain.open(execPath, file, param).then(result => {
+        res.json(result);
       }).catch(err => {
         res.status(500).json(err);
       });

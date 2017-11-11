@@ -7,8 +7,26 @@ const infra = require('../infra/external-app');
 class ExternalAppDomain {
   constructor() { }
 
-  open(path, file, param = '') {
-    return infra.calcSHA256File(file);
+  open(execPath, file, param = '') {
+    const local = {};
+
+    return infra.calcSHA256File(file).
+      then(hash => {
+
+        local.hash = hash;
+        return infra.open(execPath, file, param);
+
+      }).then(result => {
+
+        result.hash = local.hash;
+        return Promise.resolve(result);
+
+      });
+  }
+
+  watch(file, hash) {
+    // ファイル存在確認、なければinterval削除
+    // 
   }
 }
 

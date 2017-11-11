@@ -14,22 +14,48 @@ class ExternalApp {
   }
 
   calcSHA256File(file) {
-    fs.ensureDir(fileBasePath).then(() => {
+    return fs.ensureDir(fileBasePath).then(() => {
 
       return new Promise((s, t) => {
 
-        const hash = crypto.createHash('sha256')
+        const hash = crypto.createHash('sha256');
         const input = fs.createReadStream(path.resolve(fileBasePath, file));
-        hash.update(input); // FIXME: FIXME
 
-        const digest = hash.digest('base64')
-
-        s(digest);
+        input.on('readable', () => {
+          const data = input.read();
+          if (data)
+            hash.update(data);
+          else {
+            const digest = hash.digest('base64');
+            console.log(digest);
+            s(digest);
+          }
+        });
       });
 
-    })
-
+    });
   }
+
+  open(execPath, file, param) {
+    const timer = new Date();
+    return new Promise((s, t) => {
+      console.log(`chcp 65001 > nul | "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`);
+      child_process.exec(
+        `chcp 65001 > nul | "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`,
+        (err, stdout, stderr) => {
+          if (err) {
+            t(err);
+          }
+          else {
+            s({
+              stdout: stdout,
+              time: new Date() - timer
+            });
+          }
+        });
+    });
+  }
+
 }
 
 const externalApp = new ExternalApp;
