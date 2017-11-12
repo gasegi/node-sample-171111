@@ -31,17 +31,18 @@ class ExternalApp {
             s(digest);
           }
         });
+
       });
 
     });
   }
 
-  open(execPath, file, param) {
+  open(preParam, execPath, file, param) {
     const timer = new Date();
     return new Promise((s, t) => {
-      console.log(`chcp 65001 > nul | "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`);
+      console.log(`chcp 65001 > nul | ${preParam} "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`);
       child_process.exec(
-        `chcp 65001 > nul | "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`,
+        `chcp 65001 > nul | ${preParam} "${execPath}" "${path.resolve(fileBasePath, file)}" ${param}`,
         (err, stdout, stderr) => {
           if (err) {
             t(err);
