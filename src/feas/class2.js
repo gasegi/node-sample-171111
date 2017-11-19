@@ -1,20 +1,21 @@
 const request = require('request');
 
-function Teki() { }
-Teki.prototype.testSay = () => {
-  console.log('testSay');
+class HttpClient extends request.defaults {
+  constructor() {
+    super();
+    console.log(this);
+  }
+
+  testRequest() {
+    this.get('http://httpbin.org/ip', (err, res, body) => {
+      console.log('HttpClient.testRequest', body);
+    });
+  }
 }
 
-function Dragon() {
-  Teki.apply(this, arguments);
-}
-Dragon.prototype = Object.create(Teki.prototype);
+const n1 = new HttpClient();
+n1.testRequest();
+n1.get('http://httpbin.org/ip', (err, res, body) => {
+  console.log('get', body);
+});
 
-Dragon.prototype.testSay2 = () => {
-  console.log('testSay2');
-}
-
-var boss = new Dragon();
-console.log(boss.constructor);
-boss.testSay();
-boss.testSay2();
