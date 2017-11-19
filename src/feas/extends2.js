@@ -6,9 +6,9 @@ Teki.prototype.testSay = () => {
 }
 
 function Dragon() {
-  Teki.apply(this, arguments);
+  request.defaults.apply(this, arguments);
 }
-Dragon.prototype = Object.create(Teki.prototype);
+Dragon.prototype = Object.create(request);
 
 Dragon.prototype.testSay2 = () => {
   console.log('testSay2');
@@ -16,5 +16,7 @@ Dragon.prototype.testSay2 = () => {
 
 var boss = new Dragon();
 console.log(boss.constructor);
-boss.testSay();
 boss.testSay2();
+boss.get('http://httpbin.org/ip', (err, res, body) => {
+  console.log('get', body);
+});
